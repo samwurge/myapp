@@ -38,3 +38,6 @@ jobs:
           kubectl set image deployment/myapp myapp=samwurge/myapp:latest
           kubectl rollout restart deployment/myapp
           kubectl rollout status deployment/myapp --timeout=120s
+
+      - name: Debug images
+        run: docker images
