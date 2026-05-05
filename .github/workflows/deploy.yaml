@@ -12,6 +12,7 @@ jobs:
 deploy:
 runs-on: ubuntu-latest
 
+```
 steps:
   - name: Checkout code
     uses: actions/checkout@v3
@@ -37,4 +38,5 @@ steps:
     run: |
       kubectl set image deployment/myapp myapp=$IMAGE_NAME:$IMAGE_TAG
       kubectl rollout status deployment/myapp
+```
 
