@@ -13,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set image tag
         run: echo "IMAGE_TAG=${GITHUB_SHA}" >> $GITHUB_ENV
@@ -32,7 +33,8 @@ jobs:
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
 
-      - name: Deploy to Kubernetes
+      - name: Deploy to Kubernetes (force update)
         run: |
           kubectl set image deployment/myapp myapp=$IMAGE_NAME:$IMAGE_TAG
-          kubectl rollout status deployment/myapp
+          kubectl rollout restart deployment/myapp
+          kubectl rollout status deployment/myapp --timeout=120s
