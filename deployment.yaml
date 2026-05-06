@@ -17,5 +17,6 @@ spec:
       containers:
       - name: myapp
         image: samwurge/myapp:v1
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
