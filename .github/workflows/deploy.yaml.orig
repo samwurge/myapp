@@ -23,18 +23,21 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:$IMAGE_TAG .
+        run: docker build -t samwurge/myapp:latest .
 
       - name: Push Docker image
-        run: docker push $IMAGE_NAME:$IMAGE_TAG
+        run: docker push samwurge/myapp:latest
 
       - name: Set kubeconfig
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
-          chmod 600 ~/.kube/config
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
 
-      - name: Deploy to Kubernetes
+      - name: Deploy to Kubernetes (force update)
         run: |
-          kubectl set image deployment/myapp myapp=$IMAGE_NAME:$IMAGE_TAG
+          kubectl set image deployment/myapp myapp=samwurge/myapp:latest
+          kubectl rollout restart deployment/myapp
           kubectl rollout status deployment/myapp --timeout=120s
+
+      - name: Debug images
+        run: docker images
