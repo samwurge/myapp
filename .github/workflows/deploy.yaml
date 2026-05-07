@@ -23,10 +23,10 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:$IMAGE_TAG .
+        run: docker build -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
-        run: docker push $IMAGE_NAME:$IMAGE_TAG
+        run: docker push $IMAGE_NAME:latest
 
       - name: Set kubeconfig
         run: |
@@ -36,16 +36,6 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl set image deployment/myapp myapp=$IMAGE_NAME:$IMAGE_TAG
-          kubectl rollout restart deployment/myapp
+          kubectl apply -f deployment.yaml
           kubectl rollout status deployment/myapp --timeout=120s
 
-      - name: HARD PROOF - where is GitHub deploying
-        run: |
-          echo "CURRENT CONTEXT:"
-    	  kubectl config current-context
-  	  echo "CLUSTERS:"
-          kubectl config get-clusters
-          echo "SERVERS:"
-          kubectl config view -o jsonpath="{.clusters[*].cluster.server}"
-          echo
