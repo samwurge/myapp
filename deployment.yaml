@@ -16,7 +16,7 @@ spec:
       - name: regcred
       containers:
       - name: myapp
-        image: samwurge/myapp:PLACEHOLDER
+        image: samwurge/myapp:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
