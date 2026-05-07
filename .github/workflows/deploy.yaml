@@ -10,7 +10,7 @@ env:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
 
     steps:
       - name: Checkout code
@@ -23,21 +23,18 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t samwurge/myapp:latest .
+        run: docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
       - name: Push Docker image
-        run: docker push samwurge/myapp:latest
+        run: docker push $IMAGE_NAME:$IMAGE_TAG
 
       - name: Set kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
 
-      - name: Deploy to Kubernetes (force update)
+      - name: Deploy to Kubernetes
         run: |
-          kubectl set image deployment/myapp myapp=samwurge/myapp:latest
-          kubectl rollout restart deployment/myapp
+          kubectl set image deployment/myapp myapp=$IMAGE_NAME:$IMAGE_TAG
           kubectl rollout status deployment/myapp --timeout=120s
-
-      - name: Debug images
-        run: docker images
