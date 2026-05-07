@@ -23,7 +23,7 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:latest .
+        run: docker build --pull --no-cache -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
         run: docker push $IMAGE_NAME:latest
