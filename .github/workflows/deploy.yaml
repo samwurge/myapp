@@ -47,5 +47,5 @@ jobs:
   	  echo "CLUSTERS:"
           kubectl config get-clusters
           echo "SERVERS:"
-          kubectl config view -o jsonpath='{.clusters[*].cluster.server}'
+          kubectl config view -o jsonpath="{.clusters[*].cluster.server}"
           echo
