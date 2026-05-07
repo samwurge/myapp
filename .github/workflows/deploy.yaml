@@ -37,10 +37,16 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           kubectl set image deployment/myapp myapp=$IMAGE_NAME:$IMAGE_TAG
+          kubectl rollout restart deployment/myapp
           kubectl rollout status deployment/myapp --timeout=120s
 
-      - name: Cluster debug
+      - name: HARD PROOF - where is GitHub deploying
         run: |
-          kubectl config current-context
-          kubectl cluster-info
-          kubectl get nodes
+          echo "CURRENT CONTEXT:"
+    	  kubectl config current-context
+
+  	  echo "CLUSTERS:"
+          kubectl config get-clusters
+
+          echo "SERVERS:"
+          kubectl config view -o jsonpath='{.clusters[*].cluster.server}'
