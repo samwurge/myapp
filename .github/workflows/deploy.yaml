@@ -48,3 +48,4 @@ jobs:
           kubectl config get-clusters
           echo "SERVERS:"
           kubectl config view -o jsonpath='{.clusters[*].cluster.server}'
+          echo
